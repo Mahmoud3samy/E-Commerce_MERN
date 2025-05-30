@@ -26,19 +26,12 @@ const validateJWT = (req: ExtendRequest, res: Response, next: NextFunction) => {
         return;
       }
 
-      if (err) {
-        res.status(403).send('Invalid token');
-        return;
-      }
-
       if (!payload) {
         res.status(403).send('Invalid token payload');
         return;
       }
     });
   
-      
-
       const userPayload = payload as {
         email: string;
         firstName: string;
