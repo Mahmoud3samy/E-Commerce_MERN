@@ -10,8 +10,9 @@ import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import ShoppingCart from '@mui/icons-material/ShoppingCart';
 import { useAuth } from '../context/Auth/AuthContext';
-import { Button, Grid } from '@mui/material';
+import { Badge, Button, Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 function Navbar() {
@@ -31,13 +32,17 @@ function Navbar() {
   };
 
   const handleLogin = () => {
-    navigate("/login");
-  }
+    navigate('/login');
+  };
 
   const handleLogout = () => {
     logout();
     navigate('/');
     handleCloseUserMenu();
+  };
+
+  const handleCart =() => {
+    navigate("/cart");
   }
 
   return (
@@ -96,56 +101,71 @@ function Navbar() {
                 Tech Hub
               </Typography>
             </Box>
-            <Box sx={{ flexGrow: 0 }}>
+            <Box
+              sx={{ display: 'flex', flexDirection: 'row', flexGrow: 0 }}
+              gap={4}
+              alignItems="center"
+              justifyContent="center"
+            >
+              <IconButton aria-label="cart" onClick={handleCart}>
+                <Badge badgeContent={4} color="secondary">
+                  <ShoppingCart sx={{ color: '#ffffff' }} />
+                </Badge>
+              </IconButton>
               {isAuthenticated ? (
-              
-              <>
-              <Tooltip title="Open settings">
-                <Grid
-                  container
-                  alignItems="center"
-                  justifyContent="center"
-                  gap={2}
-                >
-                  <Grid item>
-                    <Typography>{username}</Typography>
-                  </Grid>
-                  <Grid item>
-                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                      <Avatar
-                        alt={username || ''}
-                        src="/static/images/avatar/2.jpg"
-                      />
-                    </IconButton>
-                  </Grid>
-                </Grid>
-              </Tooltip>
-              <Menu
-                sx={{ mt: '45px' }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                <MenuItem onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">My Orders</Typography>
-                </MenuItem>
-                <MenuItem onClick={handleLogout}>
-                  <Typography textAlign="center">Logout</Typography>
-                </MenuItem>
-              </Menu>
-              </>
+                <>
+                  <Tooltip title="Open settings">
+                    <Grid
+                      container
+                      alignItems="center"
+                      justifyContent="center"
+                      gap={2}
+                    >
+                      <Grid item>
+                        <Typography>{username}</Typography>
+                      </Grid>
+                      <Grid item>
+                        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                          <Avatar
+                            alt={username || ''}
+                            src="/static/images/avatar/2.jpg"
+                          />
+                        </IconButton>
+                      </Grid>
+                    </Grid>
+                  </Tooltip>
+                  <Menu
+                    sx={{ mt: '45px' }}
+                    id="menu-appbar"
+                    anchorEl={anchorElUser}
+                    anchorOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    open={Boolean(anchorElUser)}
+                    onClose={handleCloseUserMenu}
+                  >
+                    <MenuItem onClick={handleCloseUserMenu}>
+                      <Typography textAlign="center">My Orders</Typography>
+                    </MenuItem>
+                    <MenuItem onClick={handleLogout}>
+                      <Typography textAlign="center">Logout</Typography>
+                    </MenuItem>
+                  </Menu>
+                </>
               ) : (
-                <Button  variant='contained' color='success' onClick={handleLogin}>Login</Button>
+                <Button
+                  variant="contained"
+                  color="success"
+                  onClick={handleLogin}
+                >
+                  Login
+                </Button>
               )}
             </Box>
           </Box>
