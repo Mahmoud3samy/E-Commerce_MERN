@@ -1,43 +1,50 @@
-import { Box, Typography } from "@mui/material";
-import Container from "@mui/material/Container";
-import { useEffect, useState } from "react";
-import { BASE_URL } from "../constants/baseUrl";
-import { useAuth } from "../context/Auth/AuthContext";
+import { Box, Typography } from '@mui/material';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import { useCart } from '../context/Auth/Cart/CartContext';
 
 const CartPage = () => {
-  const { token } = useAuth();
   const { cartItems, totalAmount } = useCart();
-  const [ error, setError ] = useState("");
-
-  useEffect(() => {
-    if (!token) {
-      return;
-    }
-
-    const fetchCart = async () => {
-      const response = await fetch(`${BASE_URL}/cart`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        setError("Failed to fetch user cart. please try again");
-      }
-      
-      const data = await response.json();
-      setCart(data);
-    };
-
-    fetchCart();
-  }, [token]);
 
   return (
-    <Container sx={{ mt: 2 }}> 
+    <Container fixed sx={{ mt: 2 }}>
       <Typography variant="h4">My Cart</Typography>
-      {cartItems.map((item) => (
-        <Box>{item.title}</Box>
-      ))}
+      <Box display="flex" flexDirection="column" gap={4}>
+        {cartItems.map((item) => (
+          <Box
+            display="flex"
+            flexDirection="row"
+            justifyContent="space-between"
+            alignItems="center"
+            sx={{
+              border: 1,
+              borderColor: '#f2f2f2',
+              borderRadius: 5,
+              padding: 1,
+            }}
+          >
+            <Box display="flex" flexDirection="row" alignItems="center" gap={1}>
+              <img src={item.image} width={50} />
+              <Box>
+                <Typography variant="h6">{item.title}</Typography>
+                <Typography>
+                  {item.quantity} X {item.unitPrice} EGP
+                </Typography>
+                <Button>Remove Item</Button>
+              </Box>
+            </Box>
+            <ButtonGroup variant="contained" aria-label="Basic button group">
+              <Button> - </Button>
+              <Button> + </Button>
+            </ButtonGroup>
+          </Box>
+        ))}
+        <Box>
+          {' '}
+          <Typography variant="h4">TotalAmount: {totalAmount.toFixed(2)} EGP </Typography>
+        </Box>
+      </Box>
     </Container>
   );
 };
