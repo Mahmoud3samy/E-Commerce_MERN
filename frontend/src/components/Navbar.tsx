@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 
 function Navbar() {
   const { username, isAuthenticated, logout } = useAuth();
+  const { cartItems } = useCart();
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
@@ -108,7 +109,7 @@ function Navbar() {
               justifyContent="center"
             >
               <IconButton aria-label="cart" onClick={handleCart}>
-                <Badge badgeContent={4} color="secondary">
+                <Badge badgeContent={cartItems.length} color="secondary">
                   <ShoppingCart sx={{ color: '#ffffff' }} />
                 </Badge>
               </IconButton>

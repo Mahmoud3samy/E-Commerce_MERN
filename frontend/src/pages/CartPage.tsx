@@ -32,8 +32,6 @@ const CartPage = () => {
     fetchCart();
   }, [token]);
 
-
-  
   return (
     <Container sx={{ mt: 2 }}> 
       <Typography variant="h4">My Cart</Typography>
