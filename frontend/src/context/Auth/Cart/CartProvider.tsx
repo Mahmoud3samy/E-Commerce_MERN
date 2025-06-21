@@ -76,22 +76,17 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
     }
   };
 
-  const updateItemInCart = async (productId: string, quantity: number) => {
+  const removeItemInCart = async (productId: string) => {
     try {
-      const response = await fetch(`$(BASE_URL)/cart/item`, {
-        method: 'PUT',
+      const response = await fetch(`$(BASE_URL)/cart/item/${productId}`, {
+        method: 'DELETE',
         headers: {
-          'Content-Type': 'application/json',
           Authhorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          productId,
-          quantity,
-        }),
       });
 
       if (!response.ok) {
-        setError('Failed to update to cart');
+        setError('Failed to delete to cart');
       }
 
       const cart = await response.json();
@@ -100,6 +95,25 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
         setError('Failed to parse cart data');
       }
 
+      const cartItemsMapped = cart.items.map (
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ({
+          product,
+          quantity,
+          unitPrice,
+        }: {
+          product: any;
+          quantity: number;
+          unitPrice: Number;
+        }) => ({
+          productId: product._id,
+          title: product.title,
+          image: product.image,
+          quantity,
+          unitPrice,
+        })
+      );
+
       setCartItems([...cartItemsMapped]);
       setTotalAmount(cart.totalAmount);
     } catch (error) {
@@ -107,10 +121,18 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
     }
   };
 
-  }
+  
 
   return (
-    <CartContext.Provider value={{ cartItems, totalAmount, addItemToCart, updateItemInCart }}>
+    <CartContext.Provider
+      value={{
+        cartItems,
+        totalAmount,
+        addItemToCart,
+        updateItemInCart,
+        removeItemInCart,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );
