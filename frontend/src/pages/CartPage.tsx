@@ -3,11 +3,14 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import { useCart } from '../context/Auth/Cart/CartContext';
+import { useNavigate } from 'react-router-dom';
 
 
 const CartPage = () => {
   const { cartItems, totalAmount, updateItemInCart, removeItemInCart, clearCart } =
     useCart();
+
+  const navigate = useNavigate();
 
   const handleQuantity = (productId: string, quantity: number) => {
     if (quantity <= 0) {
@@ -19,6 +22,10 @@ const CartPage = () => {
 
   const handleRemoveItem = (productId: string) => {
     removeItemInCart(productId)
+  }
+
+  const handleCheckout = () => {
+    navigate("/checkout")
   }
 
   return (
@@ -57,27 +64,19 @@ const CartPage = () => {
             <ButtonGroup variant="contained" aria-label="Basic button group">
               <Button
                 onClick={() =>
-                  handleQuantity(item.productId, item.quantity - 1)
-                }
-              >
-                {' '}
-                -
-              </Button>
+                  handleQuantity(item.productId, item.quantity - 1)}> - </Button>
               <Button
                 onClick={() =>
-                  handleQuantity(item.productId, item.quantity + 1)
-                }
-              >
-                {' '}
-                +{' '}
+                  handleQuantity(item.productId, item.quantity + 1)}> +
               </Button>
             </ButtonGroup>
           </Box>
         ))}
-        <Box>
+        <Box display="flex" flexDirection="row" justifyContent="space-between">
           <Typography variant="h4">
-            TotalAmount: {totalAmount.toFixed(2)} EGP{' '}
+            TotalAmount: {totalAmount.toFixed(2)} EGP
           </Typography>
+          <Button variant="contained" onClick={handleCheckout}>Go To Chechout</Button>
         </Box>
       </Box>
       ) : (

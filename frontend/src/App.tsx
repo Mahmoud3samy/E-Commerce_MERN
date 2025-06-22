@@ -7,6 +7,7 @@ import LoginPage from "./pages/LoginPage";
 import CartPage from "./pages/CartPage";
 import ProductedRoute from "./components/ProductedRoute";
 import CartProvider from "./context/Auth/Cart/CartProvider";
+import CheckoutPage from "./pages/CheckoutPage";
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route element={<ProductedRoute />}>
             <Route path="/cart" element={<CartPage />} />
+            <Route path="/checkout" element={<CheckoutPage/>} />
           </Route>
         </Routes>
       </BrowserRouter>
