@@ -6,7 +6,7 @@ import { useCart } from '../context/Auth/Cart/CartContext';
 
 
 const CartPage = () => {
-  const { cartItems, totalAmount, updateItemInCart, removeItemInCart } =
+  const { cartItems, totalAmount, updateItemInCart, removeItemInCart, clearCart } =
     useCart();
 
   const handleQuantity = (productId: string, quantity: number) => {
@@ -23,7 +23,11 @@ const CartPage = () => {
 
   return (
     <Container fixed sx={{ mt: 2 }}>
-      <Typography variant="h4">My Cart</Typography>
+      <Box display='flex' flexDirection='row' justifyContent='space-between' sx={{ mb: 2 }}>
+        <Typography variant="h4">My Cart</Typography>
+        <button onClick={() => clearCart()}>Clear Cart</button>
+      </Box>
+      {cartItems.length ? ( 
       <Box display="flex" flexDirection="column" gap={4}>
         {cartItems.map((item) => (
           <Box
@@ -45,12 +49,28 @@ const CartPage = () => {
                 <Typography>
                   {item.quantity} X {item.unitPrice} EGP
                 </Typography>
-                <Button onClick={() => handleRemoveItem(item.productId)}>Remove Item</Button>
+                <Button onClick={() => handleRemoveItem(item.productId)}>
+                  Remove Item
+                </Button>
               </Box>
             </Box>
             <ButtonGroup variant="contained" aria-label="Basic button group">
-              <Button onClick={() => handleQuantity(item.productId, item.quantity -1)}> -</Button>
-              <Button onClick={() => handleQuantity(item.productId, item.quantity + 1)}> + </Button>
+              <Button
+                onClick={() =>
+                  handleQuantity(item.productId, item.quantity - 1)
+                }
+              >
+                {' '}
+                -
+              </Button>
+              <Button
+                onClick={() =>
+                  handleQuantity(item.productId, item.quantity + 1)
+                }
+              >
+                {' '}
+                +{' '}
+              </Button>
             </ButtonGroup>
           </Box>
         ))}
@@ -60,6 +80,11 @@ const CartPage = () => {
           </Typography>
         </Box>
       </Box>
+      ) : (
+        <Typography>
+          Cart is empty. Please start shopping and add items first.
+        </Typography>
+      )}
     </Container>
   );
 };
