@@ -3,14 +3,44 @@ import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import { useCart } from '../context/Auth/Cart/CartContext';
 import { useRef } from 'react';
+import { BASE_URL } from '../constants/baseUrl';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/Auth/AuthContext';
 
 const CheckoutPage = () => {
   const { cartItems, totalAmount } = useCart();
+  const { token } = useAuth();
 
   const addressRef = useRef<HTMLInputElement>(null);
 
+  const navigate = useNavigate();
+
+  const handleConfirmOrder = async () => {
+    const address = addressRef.current?.value;
+
+    if (!address) return;
+
+    const response = await fetch(`${BASE_URL}/user/cart/checkout`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authhorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        address,
+      }),
+    });
+
+    if (!response.ok) return;
+
+    navigate('/order-success');
+  };
+
   return (
-    <Container fixed sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 1 }}>
+    <Container
+      fixed
+      sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 1 }}
+    >
       <Box
         display="flex"
         flexDirection="row"
@@ -19,7 +49,12 @@ const CheckoutPage = () => {
       >
         <Typography variant="h4">Checkout</Typography>
       </Box>
-      <TextField inputRef={addressRef} label="Delivery Address" name="address" fullWidth/>
+      <TextField
+        inputRef={addressRef}
+        label="Delivery Address"
+        name="address"
+        fullWidth
+      />
       <Box
         display="flex"
         flexDirection="column"
@@ -69,12 +104,12 @@ const CheckoutPage = () => {
           </Box>
         ))}
         <Box>
-          <Typography variant="body2" sx={{ textAline: "right" }}>
+          <Typography variant="body2" sx={{ textAline: 'right' }}>
             TotalAmount: {totalAmount.toFixed(2)} EGP
           </Typography>
         </Box>
       </Box>
-      <Button variant="contained" fullWidth>
+      <Button variant="contained" fullWidth onClick={handleConfirmOrder}>
         Pay Now
       </Button>
     </Container>
